@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>University Boulevard</title>
+
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	
+	<link rel="shortcut icon" type="image/x-icon" href="docs/images/favicon.ico" />
+
+	<!-- css style page -->
+	<link rel="stylesheet" type="text/css" href="css/leaflet.css">
+	<!-- font -->
+	<link href="https://fonts.googleapis.com/css?family=Droid+Serif:400,400i,700,700i|Poppins:300,400,500,600,700&amp;subset=latin-ext" rel="stylesheet">
+
+    <!-- <link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.3/dist/leaflet.css" integrity="sha512-07I2e+7D8p6he1SIM+1twR5TIrhUQn9+I6yjqD53JQjFiMf8EtC93ty0/5vJTZGF8aAocvHYNEDJajGdNx1IsQ==" crossorigin=""/> -->
+    <script src="https://unpkg.com/leaflet@1.0.3/dist/leaflet.js" integrity="sha512-A7vV8IFfih/D732iSSKi20u/ooOfj/AGehOKq0f4vLT1Zr2Y+RX7C+w8A1gaSasGtRUZpF/NZgzSAu4/Gc41Lg==" crossorigin=""></script>
+
+<style type="text/css">
+
+.my_polyline1 { 
+  stroke: #FFC62E;
+  fill: none;
+  /*stroke-dasharray: 10,10; */
+  stroke-width: 7;  
+  stroke-opacity:0.8;
+}
+.my_polyline2 { 
+  stroke: #C70101;
+  fill: none;
+  /*stroke-dasharray: 10,10; */
+  stroke-width: 7; 
+  stroke-opacity:0.8; 
+}
+.my_polyline3 { 
+  stroke: #FF7C00;
+  fill: none;
+  /*stroke-dasharray: 10,10; */
+  stroke-width: 7; 
+  stroke-opacity:0.8; 
+}
+/*fence*/
+.my_polyline4 { 
+  stroke: black;
+  fill: none;
+  stroke-dasharray: 10,10; 
+  stroke-width: 7;  
+  stroke-opacity:0.8;
+}
+.my_polyline5 { 
+  stroke: #FFE804;
+  fill: none;
+  stroke-width: 7;  
+  stroke-opacity:0.8;
+}
+.tooltip_stats {
+  background: white;
+  border: 2px solid black
+}
+.leaflet-tooltip-left.tooltip_stats::before {
+  border-left-color: black;
+}
+.leaflet-tooltip-right.tooltip_stats::before {
+  border-right-color: black;
+}
+h1 {
+	font-family: 'Droid Serif', serif;
+	font-weight:600;
+	font-size:24pt;
+	fill:#2c2c2c;
+	color:black;
+	margin-bottom:5px;
+	margin-top:10px;
+}
+h3 {
+	font-family:'Poppins', sans-serif;
+	font-weight:300;
+	font-size:8pt;
+}
+h4 {
+	font-family:'Droid Serif', serif;
+	font-weight:400;
+	font-size:9pt;
+	color:#2c2c2c;
+	text-align:right;
+}
+h5 {
+	font-family:'Droid Serif', serif;
+	font-weight:400;
+	font-size:10pt;
+	color:#2c2c2c;
+	text-align:left;
+}
+/*Styles the div that holds the highchart */
+div#container {
+	margin-top:20px;
+	margin-bottom:20px;
+	padding-left:20px;
+	padding-top:20px;
+	padding-right:30px;
+	padding-bottom:10px;
+	border-left:1px solid black;
+	border-bottom:14pt solid black;
+	border-top:1px solid black;
+	border-right:1px solid black;
+	box-shadow:5px 5px 10px gainsboro;
+	min-width: 310px;
+	max-width: 600px; 
+	height: 600px; 
+	margin-left:auto;
+	margin-right:auto;
+}
+</style>
+
+</head>
+<body>
+<body>
+<div id="container" style="min-width: 440px; max-width: 800px; height: 1000px; margin: 0 auto">
+	
+	<h1>In Mid-Atlantic states, unequal representation in Congress</h1>
+	<span style="height:8px; font-size:8pt; background-color:#fbd603; color:#fbd603;">____________________________________________________________</span><h3>BY HELEN LYONS and NAEMA AHMED<a href="http://cnsmaryland.org" target="_blank" style="text-decoration:none;"> | CAPITAL NEWS SERVICE</a></h3>
+	<h5>
+		A proposal in the Maryland legislature would create an independent commission to redraw the state's congressional districts, in response to concerns that the current districts are too favorable to Democrats.  The catch: it would only take effect if five other states -- New York, New Jersey, Virginia, Pennsylvania and North Carolina -- agree to do the same.  <br><br>As this map shows, the political lines in Maryland, New York and New Jersey were drawn in a way to favor Democrats; all have more Democratic representatives than voter registration party statistics would predict.  The political lines in Pennsylvania, Virginia and North Carolina were drawn to favor Republicans;  They all have more Republican representatives than voter registration party statistics would predict. Mouseover each state for more details. Source: State board of election websites, CNS analysis.
+	</h5>
+	<!-- map -->
+	<div id="mapid" style="min-width: 400px; width: 800px; height: 600px;"></div>
+	<!-- cp stacked bar -->
+
+</div>
+
+<script>
+
+	var mymap = L.map('mapid').setView([38.985549, -76.979726], 15);
+
+	L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw', {
+		maxZoom: 18,
+		attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, ' +
+			'<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
+			'Imagery © <a href="http://mapbox.com">Mapbox</a>',
+		id: 'mapbox.streets'
+	}).addTo(mymap);
+
+	//Define an array of Latlng objects (points along the line)
+	 var polylinePoints = [
+	    new L.LatLng(38.987340, -76.984973),
+	    new L.LatLng(38.987262, -76.984807),
+	    new L.LatLng(38.986366, -76.983434),
+	    new L.LatLng(38.985865, -76.982533),
+	    new L.LatLng(38.985402, -76.981712),
+	 ];
+	var polylinePoints2 = [
+	    new L.LatLng(38.985402, -76.981712),
+	    new L.LatLng(38.984026, -76.979349),
+	    new L.LatLng(38.983781, -76.978756),
+	    new L.LatLng(38.983639, -76.978187),
+	    new L.LatLng(38.983631, -76.977168),
+	    new L.LatLng(38.983735, -76.976074),
+	    new L.LatLng(38.983955, -76.973902),
+	 ];
+	var polylinePoints3 = [
+	    new L.LatLng(38.983955, -76.973902),
+	    new L.LatLng(38.984183, -76.971479),
+	    new L.LatLng(38.984409, -76.968976),
+	    new L.LatLng(38.984700, -76.966190),
+	 ];
+	 //fence
+	 var polylinePoints4 = [
+	    new L.LatLng(38.991233, -76.990159),
+	    new L.LatLng(38.989547, -76.988547),
+	    new L.LatLng(38.987173, -76.985102),
+	    // new L.LatLng(38.984700, -76.966190),
+	 ];
+	 var polylinePoints5 = [
+	    new L.LatLng(38.991308, -76.989955),
+	    new L.LatLng(38.989464, -76.988204),
+	    new L.LatLng(38.987340, -76.984973),
+	    // new L.LatLng(38.984700, -76.966190),
+	 ];
+	 // segment 1
+	 var polyline = new L.Polyline(polylinePoints,{className: 'my_polyline1'}).bindTooltip('<dl><dt>Killed: 2</dt><dt>Severely Injured: 11</dt><dt>Struck: 15</dt><dt>Total: 28</dt></dl>', {className: 'tooltip_stats'}).addTo(mymap);
+	 // segment 2
+	 var polyline2 = new L.Polyline(polylinePoints2, { className: 'my_polyline2' }).bindTooltip('<dl><dt>Killed: 4</dt><dt>Severely Injured: 16</dt><dt>Struck: 19</dt><dt>Total: 39</dt></dl>', {className: 'tooltip_stats'}).addTo(mymap);
+	 // segment 3
+	 var polyline3 = new L.Polyline(polylinePoints3, { className: 'my_polyline3' }).bindTooltip('<dl><dt>Killed: 2</dt><dt>Severely Injured: 12</dt><dt>Struck: 14</dt><dt>Total: 28</dt></dl>', {className: 'tooltip_stats'}).addTo(mymap);
+	 // fence 
+	 var polyline4 = new L.Polyline(polylinePoints4, { className: 'my_polyline4' }).addTo(mymap);
+	 //next to fence
+	 var polyline5 = new L.Polyline(polylinePoints5, { className: 'my_polyline5' }).bindTooltip('<dl><dt>Killed: 0</dt><dt>Severely Injured: 11</dt><dt>Struck: 3</dt><dt>Total: 14</dt></dl>', {className: 'tooltip_stats'}).addTo(mymap);
+
+	 //legend
+	var lines = ["#FFC62E", "#C70101", "#FF7C00", "000000", "FFE804"];
+	var legend = svg.selectAll(".legend")
+	  .data(lines)
+	  .enter().append("g")
+	  .attr("class", "legend")
+	  .attr("transform", function(d, i) { return "translate(30," + i * 19 + ")"; }).addTo(mymap);
+	 
+	legend.append("rect")
+	  .attr("x", width - 18)
+	  .attr("width", 18)
+	  .attr("height", 18)
+	  .style("fill", function(d, i) {return lines.slice().reverse()[i];});
+	 
+	legend.append("text")
+	  .attr("x", width + 5)
+	  .attr("y", 9)
+	  .attr("dy", ".35em")
+	  .attr("font-family", "Poppins")
+	  .style("text-anchor", "start")
+	  .text(function(d, i) { 
+	    switch (i) {
+	      case 0: return "killed";
+	      case 1: return "severely injured";
+	      case 2: return "struck";
+	      case 3: return "work";
+	      case 4: return "pls";
+
+	    }
+	  });
+</script>
+
+</body>
+</html>

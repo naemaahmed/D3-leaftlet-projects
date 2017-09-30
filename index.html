@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <style>
+        .axis path {
+            fill: none;
+            stroke: #777;
+            shape-rendering: crispEdges;
+        }
+        .axis text {
+            font-family: Lato;
+            font-size: 13px;
+        }
+    </style>
+</head>
+
+<body>
+<svg id="visualisation" width="800" height="500"></svg>
+  <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+  <script>
+      function InitChart() {
+          var data = [{
+              "death": "9",
+              "year": "2009"
+          }, {
+              "death": "6",
+              "year": "2010"
+          }, {
+              "death": "5",
+              "year": "2011"
+          }, {
+              "death": "10",
+              "year": "2012"
+          }, {
+              "death": "12",
+              "year": "2013"
+          }, {
+              "death": "9",
+              "year": "2014"
+          }];
+
+          //select svg
+          var vis = d3.select("#visualisation"),
+              WIDTH = 800,
+              HEIGHT = 500,
+              MARGINS = {
+                  top: 20,
+                  right: 80,
+                  bottom: 20,
+                  left: 50
+              },
+              // scale based on max and min of the data (year & deaths)
+              xScale = d3.scale.linear().range([MARGINS.left, WIDTH - MARGINS.right]).domain([2009,2014]),
+              yScale = d3.scale.linear().range([HEIGHT - MARGINS.top, MARGINS.bottom]).domain([0, 12]),
+              xAxis = d3.svg.axis() //create axis
+              .scale(xScale).tickFormat(d3.format("d")),
+              yAxis = d3.svg.axis()
+              .scale(yScale)
+              .orient("left"); 
+          
+          vis.append("svg:g")
+              .attr("class", "x axis")
+              .attr("transform", "translate(0," + (HEIGHT - MARGINS.bottom) + ")") //moves x-axis down
+              .call(xAxis);
+          vis.append("svg:g")
+              .attr("class", "y axis")
+              .attr("transform", "translate(" + (MARGINS.left) + ",0)")
+              .call(yAxis);
+          var lineGen = d3.svg.line()
+              .x(function(d) {
+                  return xScale(d.year);
+              })
+              .y(function(d) {
+                  return yScale(d.death);
+              }); //smooth line
+          vis.append('svg:path')
+              .attr('d', lineGen(data))
+              .attr('stroke', 'green')
+              .attr('stroke-width', 2)
+              .attr('fill', 'none');
+      }
+      InitChart();
+  </script>
+</body>
+
+</html>
